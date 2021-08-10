@@ -1,8 +1,12 @@
 type uuid = string
 
-type DecisionStrategy = 'UNANIMOUS' | 'AFFIRMATIVE'
+export enum DecisionStrategy {
+    UNANIMOUS = "UNANIMOUS",
+    AFFIRMATIVE = "AFFIRMATIVE",
+    CONSENSUS = "CONSENSUS",
+}
 
-type ResourceAttribute = {
+export type ResourceAttribute = {
     sort?: Array<string>
     redirect?: Array<string>
     hiddden?: Array<string>
@@ -13,26 +17,35 @@ type ResourceScope = {
     name: string
 }
 
-interface Resource {
+export interface Resource {
     _id: uuid,
     name: string
     uris: Array<string>
     displayName: string
     scopes?: Array<ResourceScope>
     ownerManagedAccess: boolean
-    attributes: Array<ResourceAttribute>
+    attributes: ResourceAttribute
 }
 
-type PolicieType = 'role' | 'resource' | 'scope'
+export enum PolicieType {
+    ROLE = 'role',
+    SCOPE = 'scope',
+    RESOURCE = 'resource',
+}
 
-type PolicieLogic = 'POSITIVE'
+// type PolicieType = 'role' | 'resource' | 'scope'
+
+export enum PolicieLogic {
+    POSITIVE = 'POSITIVE',
+    NEGATIVE = 'NEGATIVE',
+}
 
 type PolicieRole = {
     id: string
     required: boolean
 }
 
-interface Policie {
+export interface Policie {
     id: uuid
     name: string
     description: string,
@@ -43,7 +56,7 @@ interface Policie {
 }
 
 
-type PolicieConfig = NormalPolicieConfig | PermissionConfig | ScopePermissionConfig
+export type PolicieConfig = NormalPolicieConfig | PermissionConfig | ScopePermissionConfig
 
 type NormalPolicieConfig = {
     roles?: Array<PolicieRole>
@@ -51,7 +64,7 @@ type NormalPolicieConfig = {
 
 type PermissionConfig = {
     // [ Policie.name ]
-    applyPolicies?: Array<string>
+    applyPolicies?: string
 }
 
 type ResourcePermissionConfig = PermissionConfig & {
@@ -59,19 +72,20 @@ type ResourcePermissionConfig = PermissionConfig & {
 }
 
 type ScopePermissionConfig = PermissionConfig & {
-    scopes?: Array<string>
-    resources?: Array<string>
+    scopes?: string
+    resources?: string
 }
 
-interface Scope {
+export interface Scope {
     id: uuid
     name: string,
     displayName?: string
 }
 
-type PolicyEnforcementMode = 'ENFORCING'
-
-interface AuthConfig {
+export enum PolicyEnforcementMode {
+    ENFORCING = "ENFORCING"
+}
+export interface AuthConfig {
     allowRemoteResourceManagement: boolean
     policyEnforcementMode: PolicyEnforcementMode
     resources: Array<Resource>

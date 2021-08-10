@@ -4,8 +4,9 @@ export enum ResourceType {
     Btn,
 }
 
-type ResourceItem = {
+export type ResourceItem = {
     name: string
+    sort?: string
     type: ResourceType
     roles?: Array<string>
     parent?: ResourceItem | null
@@ -31,6 +32,7 @@ type basePos = {
     col: number
 }
 
+export type Resources = Array<ResourceItem>
 export class ResourcesTree {
 
     private roles: Array<string>
@@ -41,7 +43,7 @@ export class ResourcesTree {
 
     private current: ResourceItem
 
-    private list: Array<ResourceItem>
+    private list: Resources
 
     constructor(tables, options: ResourcesTreeOption) {
 
@@ -55,6 +57,14 @@ export class ResourcesTree {
             row: options.menuRow,
             col: options.menuCol
         })
+    }
+
+    getRoles(): Array<string> {
+        return this.roles
+    }
+
+    getResources(): Resources {
+        return this.list
     }
 
     initRoles(tables, options) {
@@ -143,8 +153,8 @@ export class ResourcesTree {
             let offset = 0
             let cell = rows[0]
             if(!cell) {
-                if(rows[rows.length - 1]) {
-                    offset = 1
+                if(rows[rows.length - 1] && index === 0) {
+                    offset = rows.length - 1
                     cell = rows[offset]
                 } else {
                     return null
@@ -161,7 +171,7 @@ export class ResourcesTree {
             const result:any = {}
             // 叶节点
             if(!children || !children.length) {
-                const roles = this.getRoles({ row: basePos.row + index, col: basePos.col })
+                const roles = this.getPermisssionRoles({ row: basePos.row + index, col: basePos.col })
                 if(roles) result.roles = roles
             }
 
@@ -176,7 +186,7 @@ export class ResourcesTree {
         }).filter(item => item)
     }
 
-    getRoles(pos: basePos) {
+    getPermisssionRoles(pos: basePos) {
         const { rolesHeader: { col } } = this.options
         const permisssions = this.tables[pos.row].slice(col)
         return permisssions.map((v, index) => v ? this.roles[index] : null).filter(item => item)

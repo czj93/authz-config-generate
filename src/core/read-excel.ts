@@ -1,15 +1,22 @@
 const path = require('path')
 import XLSX, { readFile, utils } from 'xlsx'
 
+import { Transform, TransformOptions } from './transform'
 import { ResourcesTree, ResourceType } from './resources-tree'
+const fs = require('fs')
 
-
-export function readXlsx (path) {
+export function readXlsx (path, outDir?: string) {
     let workbook: XLSX.WorkBook = readFile(path)
     let sheetNames = workbook.SheetNames
     const sheets = sheetNames.map(sheetName => parseSheet(sheetName, workbook.Sheets[sheetName]))
     
-    return sheets
+    const config: TransformOptions = {
+        clientId: 'test'
+    } 
+    const authzConfig = new Transform(sheets[0], config).transform()
+
+    const out = outDir || './authz.config.json'
+    fs.writeFileSync(out, JSON.stringify(authzConfig, null, 4))
 }
 
 
@@ -43,19 +50,4 @@ const fillTables = (tabels) => {
 }
 
 readXlsx(path.resolve(__dirname, '../bin/temp.xlsx'))
-
-// const testMatri = [
-//     [ 'menu1', 'menu1-1', 'menuu1-1-1' ],
-//     [ , , 'menu1-1-2'],
-//     [ , , 'menu1-1-3'],
-//     [ , 'menu1-2', 'menu1-2-1'],
-//     [ , , 'menu1-2-2'],
-//     ['menu2', 'menu2-1'],
-//     ['menu3', 'menu3-1', 'menu3-1-1'],
-// ]
-
-
-
-
-
 

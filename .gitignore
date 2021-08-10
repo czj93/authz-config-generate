@@ -6,6 +6,8 @@
 
 package-lock.json
 
+authz.config.json
+
 # Logs
 logs
 *.log
