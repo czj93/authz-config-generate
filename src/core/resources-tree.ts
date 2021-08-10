@@ -12,7 +12,7 @@ export type ResourceItem = {
     parent?: ResourceItem | null
     children?: Array<ResourceItem>
 }
-type ResourcesTreeOption = {
+export type ResourcesTreeOption = {
     menuRow: number,
     menuCol: number,
     menuRowCount: number,

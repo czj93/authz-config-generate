@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "bin": {
-    "excel-read": "bin/index.js"
+    "authz": "bin/index.js"
   },
   "scripts": {
     "prebuild": "rimraf dist",
