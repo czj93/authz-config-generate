@@ -162,7 +162,7 @@ export class ResourcesTree {
             }
             
             const rowCount = this.getRowCount(matri, index)
-            const childMatri = this.getChildMatri(matri, index, rowCount, offset)
+            const childMatri = this.getChildMatri(matri, index, rowCount)
             const children = 
                 childMatri.length && childMatri[0].length 
                 ? this.parseMatri(childMatri, { row: basePos.row + index, col: basePos.col + 1 })
@@ -177,11 +177,15 @@ export class ResourcesTree {
 
             const type = !!offset || basePos.col === this.options.btnCol ? ResourceType.Btn : ResourceType.Menu
 
+            if(offset) return children
+
             return {
                 type: type,
                 ...result,
                 name: cell,
-                children: children && children.length ? children : null 
+                children: children && children.length 
+                    ? Array.isArray(children[0]) ? children[0] : children
+                    : null 
             }
         }).filter(item => item)
     }

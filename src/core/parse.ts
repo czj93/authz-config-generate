@@ -79,5 +79,14 @@ const fillTables = (tabels) => {
     })
 }
 
-// readXlsx(path.resolve(__dirname, '../bin/temp.xlsx'))
+// readXlsx(path.resolve(__dirname, '../bin/template.xlsx'))
+
+// test()
+// function test () {
+//     readXlsx(
+//         path.resolve(__dirname, '../bin/template.xlsx'), 
+//         './authz.conf.json',
+//         JSON.parse(fs.readFileSync(path.resolve(__dirname, '../bin/config.json')))
+//     )
+// }
 
