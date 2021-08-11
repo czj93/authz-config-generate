@@ -48,7 +48,7 @@ type PolicieRole = {
 export interface Policie {
     id: uuid
     name: string
-    description: string,
+    description?: string,
     type: PolicieType,
     logic: PolicieLogic,
     decisionStrategy: DecisionStrategy,

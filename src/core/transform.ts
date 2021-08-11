@@ -73,7 +73,7 @@ export class Transform {
                 logic: PolicieLogic.POSITIVE,
                 decisionStrategy: DecisionStrategy.UNANIMOUS,
                 config: {
-                    roles: JSON.stringify(roleObj)
+                    roles: JSON.stringify([roleObj])
                 }
             }
         })
@@ -109,9 +109,10 @@ export class Transform {
                         btns.forEach(btn => {
                             this.addScope(item, btn)
                             this.createPermission(item, btn)
-                            if(btn.name !== VIEW_BTN_NAME && !scopes.find(scope => scope.name === btn.name)) {
+                            const scopeName = this.getScopeProp(btn.name)
+                            if(btn.name !== VIEW_BTN_NAME && scopeName && !scopes.find(scope => scope.name === scopeName)) {
                                 scopes.push({
-                                    name: btn.name
+                                    name: scopeName
                                 })
                             }
                         })
@@ -128,7 +129,10 @@ export class Transform {
                     uris: [],
                     ownerManagedAccess: false,
                     attributes,
-                    scopes
+                }
+
+                if(scopes && scopes.length) {
+                    res.scopes = scopes
                 }
 
                 resources.push(res)
@@ -199,11 +203,11 @@ export class Transform {
       return {
           id: uuidv4(),
           name: name,
-          description: '',
           type: PolicieType.RESOURCE,
           logic: PolicieLogic.POSITIVE,
           decisionStrategy,
           config: {
+            resources: JSON.stringify([ resource.name ]),
             applyPolicies
           }
       }
@@ -216,7 +220,7 @@ export class Transform {
         ? DecisionStrategy.AFFIRMATIVE 
         : DecisionStrategy.UNANIMOUS
 
-        const scopes = JSON.stringify([btn.name])
+        const scopes = JSON.stringify([this.getScopeProp(btn.name)])
         const resources = JSON.stringify([resource.name])
         const applyPolicies = JSON.stringify(btn.roles)
 
