@@ -3,7 +3,7 @@ const fs = require('fs')
 const path = require('path')
 const program = require('commander')
 const package = require('../package.json')
-const { readXlsx } = require('../dist/parse.js')
+const { readXlsx } = require('../lib/parse.js')
 
 program
 .version(package.version)

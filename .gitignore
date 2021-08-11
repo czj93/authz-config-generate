@@ -3,6 +3,7 @@
 /node_modules
 
 # *.xlsx
+/lib
 
 package-lock.json
 

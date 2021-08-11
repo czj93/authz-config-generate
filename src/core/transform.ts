@@ -97,7 +97,6 @@ export class Transform {
         const resources = []
         this.vistior(this.resources, null, (item: ResourceItem, parent: ResourceItem, index: number) => {
             if(item.type === ResourceType.Menu) {
-                console.log('1:' + item.name)
                 const sort = this.createSort(parent, index+1)
                 if(item) item.sort = sort
                 const attributes: ResourceAttribute = {
@@ -148,7 +147,6 @@ export class Transform {
             // 给父级菜单添加权限
             if(item.type === ResourceType.Menu) {
                 this.parentAddRoles(item, parent)
-                console.log('2:' + item.name)
                 if(!item.menuLeaf) {
                     this.addPermisssion('resourcePermissions', this.createResourcePermission(item))
                 }
