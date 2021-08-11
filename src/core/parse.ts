@@ -1,20 +1,19 @@
 const fs = require('fs')
 const path = require('path')
-const config = require('./config.json')
 import XLSX, { readFile, utils } from 'xlsx'
 
+import { Route, RouteList } from './routes'
 import { AuthConfig } from './interfaces/index' 
 import { Transform, TransformOptions } from './transform'
 import { ResourcesTree, ResourcesTreeOption } from './resources-tree'
+import { ResourcePlugin } from './plugins/resource-plugin'
 
-export function readXlsx (path, outDir?: string, customConfig?) {
+export function readXlsx (path, outDir?: string, config?) {
     const out = outDir || './authz.config.json'
-
     let workbook: XLSX.WorkBook = readFile(path)
-    let _config = customConfig || config
 
-    const authzConfig = parse(workbook, _config.excelConfig, _config.transformOptions)
-    
+    const authzConfig = parse(workbook, config.excelConfig, config.transformOptions)
+
     fs.writeFileSync(out, JSON.stringify(authzConfig, null, 4))
 }
 
@@ -23,20 +22,52 @@ export function parse(
     excelConfig: ResourcesTreeOption,
     transformOptions: TransformOptions,
 ): AuthConfig {
-    let sheetNames = workbook.SheetNames
-    const sheets = sheetNames.map(sheetName => parseSheet(sheetName, workbook.Sheets[sheetName], excelConfig))
+    const sheetNames = ['权限配置', '路由配置', '按钮配置']
+    // let sheetNames = workbook.SheetNames
     
-    const authzConfig = new Transform(sheets[0], transformOptions).transform()
+    const resourceTree: ResourcesTree = parsePermissionSheet(workbook.Sheets[sheetNames[0]], excelConfig)
+    
+    const resourcePlugin: ResourcePlugin = parseRouteSheet(workbook.Sheets[sheetNames[1]])
+
+    const scopeProps = parseScopeSheet(workbook.Sheets[sheetNames[2]])
+
+    transformOptions.scopeProps = scopeProps
+    transformOptions.plugins = [resourcePlugin]
+
+    const authzConfig = new Transform(resourceTree, transformOptions).transform()
 
     return authzConfig
 }
 
 
-const parseSheet = (sheetName, sheet: XLSX.Sheet, config: ResourcesTreeOption) => {
+const parsePermissionSheet = (sheet: XLSX.Sheet, config: ResourcesTreeOption) => {
     const data = utils.sheet_to_json(sheet, { header: 1 })
     fillTables(data)
     const resourcesTree = new ResourcesTree(data, config)
     return resourcesTree
+}
+
+const parseRouteSheet = (sheet: XLSX.Sheet): ResourcePlugin => {
+    const data:RouteList = utils.sheet_to_json(sheet)
+    const routes = new Route(data)
+
+
+    return new ResourcePlugin(routes)
+}
+
+type scopeConfig = {
+    displayName: string
+    scopeName: string
+}
+
+const parseScopeSheet = (sheet: XLSX.Sheet): object => {
+    const data: Array<scopeConfig> = utils.sheet_to_json(sheet)
+    const scopeMap = {}
+
+    data.forEach(item => {
+        scopeMap[item.displayName] = item.scopeName
+    })
+    return scopeMap
 }
 
 const fillTables = (tabels) => {

@@ -5,11 +5,12 @@ import {
     Scope, DecisionStrategy, ResourceAttribute, PolicieLogic, PolicieConfig,
 } from './interfaces/index' 
 
-type TransformPlugin = () => void
+import { TransformPlugin } from './plugins/interfaces'
 
 export type TransformOptions = {
     clientId: string,
-    scopeProps?: object
+    scopeProps?: object,
+    plugins?: Array<TransformPlugin>
 }
 
 const defaultScopeProps = {
@@ -45,7 +46,10 @@ export class Transform {
     constructor(resources: ResourcesTree, options: TransformOptions) {
         
         this.options = options
+        this.plugins = options.plugins || []
         this.scopePropsMap = options.scopeProps || defaultScopeProps
+
+        this.plugins.forEach(instance => instance.initRescorces(resources))
         this.resources = resources.getResources()
         
         this.init(resources)
@@ -93,7 +97,7 @@ export class Transform {
         const resources = []
         this.vistior(this.resources, null, (item: ResourceItem, parent: ResourceItem, index: number) => {
             if(item.type === ResourceType.Menu) {
-                const sort = this.createSort(parent, index)
+                const sort = this.createSort(parent, index+1)
                 if(item) item.sort = sort
                 const attributes: ResourceAttribute = {
                     sort: [sort]
@@ -247,6 +251,8 @@ export class Transform {
             scopes: this.scopes,
             decisionStrategy: DecisionStrategy.UNANIMOUS
         }
+
+        this.plugins.forEach(instance => instance.transformAfter(this, authConfig))
 
         return authConfig
     }
