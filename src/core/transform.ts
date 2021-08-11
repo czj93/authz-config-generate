@@ -97,6 +97,7 @@ export class Transform {
         const resources = []
         this.vistior(this.resources, null, (item: ResourceItem, parent: ResourceItem, index: number) => {
             if(item.type === ResourceType.Menu) {
+                console.log('1:' + item.name)
                 const sort = this.createSort(parent, index+1)
                 if(item) item.sort = sort
                 const attributes: ResourceAttribute = {
@@ -119,7 +120,12 @@ export class Transform {
                     }
                 } else {
                     // 没有按钮的叶菜单添加权限
-                    if(item.roles)  this.addPermisssion('resourcePermissions', this.createResourcePermission(item))
+                    if(item.roles) {
+                        item.menuLeaf = true
+                        this.addPermisssion('resourcePermissions', this.createResourcePermission(item))
+                        // 给父级添加可访问的 角色
+                        this.parentAddRoles(item, parent)
+                    }
                 }
                 
                 let res: Resource = {
@@ -138,11 +144,31 @@ export class Transform {
                 resources.push(res)
             }
 
-        }, () => {
-
+        }, (item, parent) => {
+            // 给父级菜单添加权限
+            if(item.type === ResourceType.Menu) {
+                this.parentAddRoles(item, parent)
+                console.log('2:' + item.name)
+                if(!item.menuLeaf) {
+                    this.addPermisssion('resourcePermissions', this.createResourcePermission(item))
+                }
+            }
         })
 
         return resources
+    }
+
+    parentAddRoles(item, parent) {
+        if(parent) {
+            if(!parent.roles) parent.roles = []
+            if(item.roles) {
+                item.roles.forEach(role => {
+                    if(!parent.roles.includes(role)) {
+                        parent.roles.push(role)
+                    }
+                })
+            }
+        }
     }
 
     // 生成菜单排序

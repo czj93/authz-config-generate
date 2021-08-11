@@ -11,6 +11,7 @@ export type ResourceItem = {
     roles?: Array<string>
     parent?: ResourceItem | null
     children?: Array<ResourceItem>
+    menuLeaf?: boolean
 }
 export type ResourcesTreeOption = {
     menuRow: number,
