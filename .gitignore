@@ -2,7 +2,7 @@
 /dist
 /node_modules
 
-*.xlsx
+# *.xlsx
 
 package-lock.json
 
