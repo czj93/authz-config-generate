@@ -29,7 +29,7 @@ export class ResourcePlugin implements TransformPlugin {
                     item.attributes.parentPath = [ route.parentPath ]
                 }
                 if(route.hidden) {
-                    item.attributes.hiddden = [ route.hidden ]
+                    item.attributes.hiddden = [ 'true' ]
                 }
             }
         })
