@@ -23,7 +23,7 @@ authz generate [配置文件地址]
 
 ## 配置文件
 
-```json
+```js
 {
     "excelConfig": {
         // 菜单及按钮区域配置信息
