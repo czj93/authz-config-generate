@@ -147,7 +147,9 @@ export class Transform {
             // 给父级菜单添加权限
             if(item.type === ResourceType.Menu) {
                 this.parentAddRoles(item, parent)
-                if(!item.menuLeaf) {
+                // 跳过带有查看按钮的的页面 避免重复创建权限
+                const flag = item.children && item.children.some(item => item.type === ResourceType.Btn && item.name === VIEW_BTN_NAME)
+                if(!item.menuLeaf && !flag) {
                     this.addPermisssion('resourcePermissions', this.createResourcePermission(item))
                 }
             }
@@ -183,7 +185,7 @@ export class Transform {
 
     addScope(resource, btn) {
         // btn.roles
-        if(!this.scopes.find(item => item.displayName === btn.name)) {
+        if(!this.scopes.find(item => item.displayName === btn.name) && btn.name !== VIEW_BTN_NAME) {
             this.scopes.push({
                 id: uuidv4(),
                 name: this.getScopeProp(btn.name),

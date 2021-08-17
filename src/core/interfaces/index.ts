@@ -56,7 +56,7 @@ export interface Policie {
 }
 
 
-export type PolicieConfig = NormalPolicieConfig | PermissionConfig | ScopePermissionConfig
+export type PolicieConfig = NormalPolicieConfig & PermissionConfig & ScopePermissionConfig
 
 type NormalPolicieConfig = {
     roles?: Array<PolicieRole>
