@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from 'uuid'
+import { vistior } from '../utils/index'
 import { ResourcesTree, Resources, ResourceType, ResourceItem } from './resources-tree'
 import {
     AuthConfig, PolicyEnforcementMode, Resource, PolicieType, Policie, 
@@ -79,23 +80,10 @@ export class Transform {
         })
     }
 
-    // 遍历 tree
-    vistior(list, parent, before?: Function, after?: Function) {
-        if(list) {
-            list.forEach((item, index) => {
-                before && before(item, parent, index)
-                if(item.children) {
-                    this.vistior(item.children, item, before, after)
-                }
-                after && after(item, parent, index)
-            })
-        }
-    }
-
     // 遍历菜单tree 生成 资源、权限
     resourceTransform(): Array<Resource> {
         const resources = []
-        this.vistior(this.resources, null, (item: ResourceItem, parent: ResourceItem, index: number) => {
+        vistior(this.resources, null, (item: ResourceItem, parent: ResourceItem, index: number) => {
             if(item.type === ResourceType.Menu) {
                 const sort = this.createSort(parent, index+1)
                 if(item) item.sort = sort
