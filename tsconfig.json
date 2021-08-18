@@ -1,20 +1,14 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "declaration": true,
-    "removeComments": true,
+    "target": "esnext",
+    "module": "esnext",
     "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true,
-    "target": "es2017",
+    "strict": true,
+    "jsx": "preserve",
     "sourceMap": true,
-    "outDir": "./lib",
-    "baseUrl": "./",
-    "incremental": true,
-    "paths": {
-      "@app": ["./src"],
-      "@app/*": ["./src/*"]
-    }
-  }
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "lib": ["esnext", "dom"]
+  },
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"]
 }
