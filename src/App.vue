@@ -1,24 +1,18 @@
 <template>
   <div>
-    <el-upload
-      class="upload-demo"
-      action="https://jsonplaceholder.typicode.com/posts/"
-      multiple
-      :limit="3"
-    >
-      <el-button size="small" type="primary">点击上传</el-button>
-      <template #tip>
-        <div class="el-upload__tip">只能上传 jpg/png 文件，且不超过 500kb</div>
-      </template>
-    </el-upload>
+    <Home />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import Home from './views/home/index.vue'
 
 export default defineComponent({
   name: 'App',
+  components: {
+    Home
+  }
 })
 </script>
 
@@ -27,8 +21,6 @@ export default defineComponent({
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
 }
 </style>
