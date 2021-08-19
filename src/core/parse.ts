@@ -1,6 +1,4 @@
-const fs = require('fs')
-const path = require('path')
-import XLSX, { readFile, utils } from 'xlsx'
+import XLSX, { utils } from 'xlsx'
 
 import { Route, RouteList } from './routes'
 import { AuthConfig } from './interfaces/index' 
@@ -8,13 +6,9 @@ import { Transform, TransformOptions } from './transform'
 import { ResourcesTree, ResourcesTreeOption } from './resources-tree'
 import { ResourcePlugin } from './plugins/resource-plugin'
 
-export function readXlsx (path, outDir?: string, config?) {
-    const out = outDir || './authz.config.json'
-    let workbook: XLSX.WorkBook = readFile(path)
-
-    const authzConfig = parse(workbook, config.excelConfig, config.transformOptions)
-
-    fs.writeFileSync(out, JSON.stringify(authzConfig, null, 4))
+export type ParseConfig = {
+    excelConfig: ResourcesTreeOption,
+    transformOptions: TransformOptions
 }
 
 export function parse(

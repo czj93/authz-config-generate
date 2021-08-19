@@ -3,7 +3,7 @@ const fs = require('fs')
 const path = require('path')
 const program = require('commander')
 const package = require('../package.json')
-const { readXlsx } = require('../lib/core/parse.js')
+const { readXlsx } = require('../lib/core/index.js')
 
 program
 .version(package.version)
@@ -34,7 +34,7 @@ program
 
     config = JSON.parse(fs.readFileSync(options.conf))
 
-    readXlsx(file, (options || {}).ouput, config)
+    readXlsx(file, config, (options || {}).ouput)
 })
 
 program
