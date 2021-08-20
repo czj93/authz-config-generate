@@ -32,7 +32,7 @@ import { parse, ParseConfig } from '../../core/parse'
 import JsonEditor from '../../components/JsonEditor/index.vue'
 
 const files:Array<File> = []
-let config: Ref<Config | null> = ref()
+let config = ref()
 let authzConfig = reactive({
     config: {},
 })

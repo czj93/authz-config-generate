@@ -19,7 +19,7 @@ export class ResourcePlugin implements TransformPlugin {
 
     transformAfter(trasnform: Transform, authConfig: AuthConfig) {
         authConfig.resources.forEach((item: Resource) => {
-            const route:RouteItem = this.routeInstance.getRouteByResourceName(item.name)
+            const route: RouteItem | undefined = this.routeInstance.getRouteByResourceName(item.name)
 
             if(route) {
                 item.displayName = route.routeName

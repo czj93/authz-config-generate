@@ -13,7 +13,7 @@ export class Route {
 
     list: RouteList
 
-    routeMap: Object = {}
+    routeMap: { [key: string]: RouteItem } = {}
 
     constructor(routes: RouteList) {
         this.list = routes
@@ -22,7 +22,7 @@ export class Route {
     }
 
 
-    initMap(routes) {
+    initMap(routes: RouteList) {
         routes.forEach((item: RouteItem) => {
             if(this.routeMap[item.resourceName]) {
                 console.log(`${item.resourceName} 菜单路由重复`)

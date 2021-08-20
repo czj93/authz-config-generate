@@ -1,7 +1,7 @@
 import XLSX, { utils } from 'xlsx'
 
 import { Route, RouteList } from './routes'
-import { AuthConfig } from './interfaces/index' 
+import { AuthConfig, SheetJson } from './interfaces/index' 
 import { Transform, TransformOptions } from './transform'
 import { ResourcesTree, ResourcesTreeOption } from './resources-tree'
 import { ResourcePlugin } from './plugins/resource-plugin'
@@ -35,7 +35,7 @@ export function parse(
 
 
 const parsePermissionSheet = (sheet: XLSX.Sheet, config: ResourcesTreeOption) => {
-    const data = utils.sheet_to_json(sheet, { header: 1 })
+    const data: SheetJson = utils.sheet_to_json(sheet, { header: 1 })
     // fillTables(data)
     const resourcesTree = new ResourcesTree(data, config)
     return resourcesTree

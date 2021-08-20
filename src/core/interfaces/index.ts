@@ -13,7 +13,7 @@ export type ResourceAttribute = {
     parentPath?: Array<string>
 }
 
-type ResourceScope = {
+export type ResourceScope = {
     name: string
 }
 
@@ -59,7 +59,7 @@ export interface Policie {
 export type PolicieConfig = NormalPolicieConfig & PermissionConfig & ScopePermissionConfig
 
 type NormalPolicieConfig = {
-    roles?: Array<PolicieRole>
+    roles?: string
 }
 
 type PermissionConfig = {
@@ -93,3 +93,6 @@ export interface AuthConfig {
     scopes: Array<Scope>
     decisionStrategy: DecisionStrategy
 }
+
+
+export type SheetJson = Array<Array<string | null>>

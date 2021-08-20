@@ -1,3 +1,4 @@
+import { SheetJson } from './interfaces/index'
 
 export enum ResourceType {
     Menu,
@@ -13,6 +14,7 @@ export type ResourceItem = {
     children?: Array<ResourceItem>
     menuLeaf?: boolean
 }
+
 export type ResourcesTreeOption = {
     menuRow: number,
     menuCol: number,
@@ -28,7 +30,7 @@ export type ResourcesTreeOption = {
     btnCol: number,
 }
 
-type basePos = {
+type BasePos = {
     row: number,
     col: number
 }
@@ -40,13 +42,11 @@ export class ResourcesTree {
 
     private options: ResourcesTreeOption
 
-    private tables: Array<any>
-
-    private current: ResourceItem
+    private tables: SheetJson
 
     private list: Resources
 
-    constructor(tables, options: ResourcesTreeOption) {
+    constructor(tables: SheetJson, options: ResourcesTreeOption) {
 
         this.options = options
 
@@ -68,64 +68,36 @@ export class ResourcesTree {
         return this.list
     }
 
-    initRoles(tables, options) {
-        const list = []
+    initRoles(tables: SheetJson, options: ResourcesTreeOption) {
+        const list: Array<string> = []
         const {rolesHeader: { row, col, rowCount, colCount }} = options
 
         for(let i = row, rl = row + rowCount; i < rl; i++){
             for(let n = col, cl = col + colCount; n < cl; n++) {
                 const role = tables[i][n]
-                list.push(role)
+                if(role) {
+                    list.push(role)
+                }
             }
         }
 
         return list
     }
 
-    resourceFactory(resourceName, type: ResourceType): ResourceItem {
-        return {
-            name: resourceName,
-            type: type,
-            roles: [],
-            parent: null,
-            children: [],
-        }
-    }
-
-    append(resourceName: string, type: ResourceType) {
-        const item: ResourceItem = this.resourceFactory(resourceName, type)
-        item.parent = null
-        this.list.push(item)
-        this.current = item
-    }
-
-    appendChild(resourceName: string, type: ResourceType) {
-        const item: ResourceItem = this.resourceFactory(resourceName, type)
-        item.parent = this.current
-        this.current.children.push(item)
-        this.current = item
-    }
-
-    addRole(role) {
-        if(this.current) {
-            this.current.roles.push(role)
-        }
-    }
-
     getMatri() {
-        const list = []
+        const list: SheetJson = []
         const { menuCol, menuRow, menuRowCount, menuColCount } = this.options
         const rowEnd = menuRow + menuRowCount
         const colEnd = menuCol + menuColCount
         this.tables.forEach((row, index) => {
             if(index >= menuRow && index < rowEnd) {
-                list.push(row.slice(menuCol, colEnd))
+                list.push(row.slice(menuCol, colEnd) as [])
             }
         })
         return list
     }
 
-    getRowCount(matri, start) {
+    getRowCount(matri: SheetJson, start: number) {
         let rows = 1
         for(let i = start+1; i < matri.length; i++) {
             let cell = matri[i][0]
@@ -138,18 +110,18 @@ export class ResourcesTree {
         return rows
     }
 
-    getChildMatri(matri, start, rowCount, offset = 0) {
-        const list = []
+    getChildMatri(matri: SheetJson, start: number, rowCount: number, offset = 0) {
+        const list: SheetJson = []
         const end = start + rowCount
         matri.forEach((rows, index) => {
             if(index >= start && index < end) {
-                list.push(rows.slice(1 + offset))
+                list.push(rows.slice(1 + offset) as [])
             }
         })
         return list
     }
     // todo 多级合并单元按钮结构还有问题 offset 要自适应
-    parseMatri (matri, basePos) {
+    parseMatri (matri: SheetJson, basePos: BasePos): Array<ResourceItem> {
         return matri.map((rows, index) => {
             let offset = 0
             let cell = rows[0]
@@ -164,7 +136,7 @@ export class ResourcesTree {
             
             const rowCount = this.getRowCount(matri, index)
             const childMatri = this.getChildMatri(matri, index, rowCount)
-            const children = 
+            const children: Array<ResourceItem> | null  = 
                 childMatri.length && childMatri[0].length 
                 ? this.parseMatri(childMatri, { row: basePos.row + index, col: basePos.col + 1 })
                 : null
@@ -191,7 +163,7 @@ export class ResourcesTree {
         }).filter(item => item)
     }
 
-    getPermisssionRoles(pos: basePos) {
+    getPermisssionRoles(pos: BasePos) {
         const { rolesHeader: { col } } = this.options
         const permisssions = this.tables[pos.row].slice(col)
         return permisssions.map((v, index) => v ? this.roles[index] : null).filter(item => item)
