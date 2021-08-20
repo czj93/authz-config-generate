@@ -27,12 +27,14 @@
   "dependencies": {
     "commander": "^8.1.0",
     "element-plus": "^1.0.2-beta.71",
+    "file-saver": "^2.0.5",
     "jsoneditor": "^9.5.3",
     "uuid": "^8.3.2",
     "vue": "^3.0.5",
     "xlsx": "^0.17.0"
   },
   "devDependencies": {
+    "@types/file-saver": "^2.0.3",
     "@types/jest": "^26.0.20",
     "@types/jsoneditor": "^8.6.1",
     "@types/node": "^14.14.31",

@@ -13,6 +13,7 @@
                     <el-button size="small" type="primary">选择文件</el-button>
                 </el-upload>
                 <el-button class="mt16" size="small" type="primary" @click="generate">点击生成配置</el-button>
+                <el-button class="mt16" size="small" icon="el-icon-download" @click="download">下载文件</el-button>
             </el-col>
             <el-col :span="12">
                 <JsonEditor v-model:value="authzConfig.config" :options="editorOptions" style="height: calc(100vh - 16px)" />
@@ -22,6 +23,7 @@
 </template>
 <script lang="ts" setup>
 import XLSX from 'xlsx'
+import { saveAs } from 'file-saver'
 import { ref, Ref, reactive, toRaw, watch } from 'vue'
 import { UploadFile } from 'element-plus/es/el-upload/src/upload.type'
 
@@ -59,6 +61,13 @@ const fileChangle = (file:UploadFile, fileList: Array<File>) => {
 const generate = () => {
     const c: ParseConfig = toRaw(config.value.state)
     parseTable(files[0], c)
+}
+
+const download = () => {
+    const config = toRaw(authzConfig.config)
+    const text = JSON.stringify(config, null, 4)
+    const blob = new Blob([text], {type: 'application/json;charset=utf-8'})
+    saveAs(blob, 'authz.config.json')
 }
 
 </script>
