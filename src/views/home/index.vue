@@ -15,7 +15,7 @@
                 <el-button class="mt16" size="small" type="primary" @click="generate">点击生成配置</el-button>
             </el-col>
             <el-col :span="12">
-                <JsonEditor v-model:value="authzConfig.config" />
+                <JsonEditor v-model:value="authzConfig.config" :options="editorOptions" style="height: calc(100vh - 16px)" />
             </el-col>
         </el-row>
     </div>
@@ -33,6 +33,11 @@ const files:Array<File> = []
 let config: Ref<Config | null> = ref()
 let authzConfig = reactive({
     config: {},
+})
+
+const editorOptions = reactive({
+    mode: 'view',
+    modes: ['view', 'text', 'code'],
 })
 
 const parseTable = (file: File, config: ParseConfig) => {

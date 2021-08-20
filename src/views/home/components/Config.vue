@@ -1,7 +1,7 @@
 <template>
     <div class="config">
-        <div>参数配置</div>
-        <el-form :model="state" size="small">
+        <div class="tit">参数配置</div>
+        <el-form :model="state" size="small" label-position="left" label-width="100px">
             <el-form-item label="菜单区域信息">
                 <el-row :gutter="16">
                     <el-col :span="6">
@@ -114,5 +114,10 @@ export default defineComponent({
 <style>
 .config .el-form > .el-form-item--small.el-form-item {
     margin-bottom: 0;
+}
+.config .tit {
+    line-height: 30px;
+    margin-bottom: 16px;
+    border-bottom: 2px solid var(--el-color-primary);
 }
 </style>
