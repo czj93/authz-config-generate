@@ -36,7 +36,7 @@ export function parse(
 
 const parsePermissionSheet = (sheet: XLSX.Sheet, config: ResourcesTreeOption) => {
     const data = utils.sheet_to_json(sheet, { header: 1 })
-    fillTables(data)
+    // fillTables(data)
     const resourcesTree = new ResourcesTree(data, config)
     return resourcesTree
 }
@@ -56,7 +56,7 @@ type scopeConfig = {
 
 const parseScopeSheet = (sheet: XLSX.Sheet): object => {
     const data: Array<scopeConfig> = utils.sheet_to_json(sheet)
-    const scopeMap = {}
+    const scopeMap: { [key: string]: string } = {}
 
     data.forEach(item => {
         scopeMap[item.displayName] = item.scopeName
@@ -64,14 +64,14 @@ const parseScopeSheet = (sheet: XLSX.Sheet): object => {
     return scopeMap
 }
 
-const fillTables = (tabels) => {
-    // const maxLength = Math.max.apply(Math, tabels.map(row => row.length))
-    tabels.forEach((row, r) => {
-        row.forEach((cell, c) => {
-            if(!cell) tabels[r][c] = null
-        })
-    })
-}
+// const fillTables = (tabels) => {
+//     // const maxLength = Math.max.apply(Math, tabels.map(row => row.length))
+//     tabels.forEach((row, r) => {
+//         row.forEach((cell, c) => {
+//             if(!cell) tabels[r][c] = null
+//         })
+//     })
+// }
 
 // readXlsx(path.resolve(__dirname, '../bin/template.xlsx'))
 
