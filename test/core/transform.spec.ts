@@ -1,4 +1,4 @@
-
+// @ts-nocheck
 import { Resources, ResourceType, ResourcesTree } from '../../src/core/resources-tree'
 import { Transform, TransformOptions } from '../../src/core/transform'
 import { AuthConfig, PolicieType } from '../../src/core/interfaces/index'
